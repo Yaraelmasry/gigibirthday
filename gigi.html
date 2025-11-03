@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Gigi 🎂</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ffe4f1, #fff0f7, #fbe8ff);
+      color: #4a4a4a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #e91e63;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 25px;
+    }
+    .countdown {
+      display: flex;
+      gap: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff4081;
+    }
+    .time-box {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      min-width: 80px;
+    }
+    .label {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #e91e63;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #d81b60;
+    }
+    .wish-card {
+      display: none;
+      background: linear-gradient(135deg, #ffd6e8, #fff2f8);
+      border: 2px solid #f48fb1;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      max-width: 500px;
+      margin-top: 30px;
+      animation: fadeIn 1s ease forwards;
+    }
+    .wish-card h3 {
+      color: #e91e63;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎂 Happy Birthday Gigi 🎂</h1>
+  <h2>Counting down to midnight (Saudi Time UTC+3)</h2>
+
+  <div class="countdown">
+    <div class="time-box"><span id="hours">00</span><div class="label">Hours</div></div>
+    <div class="time-box"><span id="minutes">00</span><div class="label">Minutes</div></div>
+    <div class="time-box"><span id="seconds">00</span><div class="label">Seconds</div></div>
+  </div>
+
+  <button id="confettiBtn">🎊 Make It Rain Confetti!</button>
+
+  <div id="wishCard" class="wish-card">
+    <h3>💌 A Birthday Wish for Gigi 💌</h3>
+    <p>Dear Gigi,<br>
+      Wishing you a day filled with laughter, love, and all the sparkle you bring to everyone’s life.
+      You are one of a kind — may your year ahead be full of joy, success, and unforgettable moments. 💖
+      <br><br>— From Yara 🎀
+    </p>
+  </div>
+
+  <script>
+    // Saudi time UTC+3 countdown to midnight
+    const offsetHours = 3;
+    function getSaudiNow() {
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      return new Date(utc + 3600000 * offsetHours);
+    }
+
+    const target = new Date(getSaudiNow());
+    target.setHours(24, 0, 0, 0);
+
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const wishCard = document.getElementById('wishCard');
+
+    function updateCountdown() {
+      const now = getSaudiNow();
+      const diff = target - now;
+      if (diff <= 0) {
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        wishCard.style.display = 'block';
+        launchConfetti();
+        clearInterval(timer);
+      } else {
+        const hours = String(Math.floor((diff / 1000 / 60 / 60) % 24)).padStart(2, '0');
+        const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+        hoursEl.textContent = hours;
+        minutesEl.textContent = minutes;
+        secondsEl.textContent = seconds;
+      }
+    }
+
+    function launchConfetti() {
+      const duration = 3000;
+      const end = Date.now() + duration;
+      (function frame() {
+        confetti({
+          particleCount: 6,
+          startVelocity: 35,
+          spread: 360,
+          ticks: 60,
+          origin: { x: Math.random(), y: Math.random() - 0.2 }
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+
+    document.getElementById('confettiBtn').addEventListener('click', launchConfetti);
+
+    const timer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
